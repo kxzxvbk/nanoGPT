@@ -44,8 +44,9 @@ if init_from == 'resume':
         if k.startswith(unwanted_prefix):
             state_dict[k[len(unwanted_prefix):]] = state_dict.pop(k)
     msd = model.state_dict()
-    state_dict = msd.update(state_dict)
-    model.load_state_dict(state_dict)
+    for k in msd.keys():
+        msd[k] = state_dict[k]
+    model.load_state_dict(msd)
 elif init_from.startswith('gpt2'):
     # init from a given GPT-2 model
     model = GPT.from_pretrained(init_from, dict(dropout=0.0))
